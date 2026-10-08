@@ -60,6 +60,14 @@ Pages에는 Node.js 서버와 `.env`가 배포되지 않습니다. CSDemoApp의 
 node build-pages.mjs
 ```
 
+## 앱 매니페스트와 아이콘
+
+`public/manifest.webmanifest`를 HTML에 연결했습니다. 앱 이름은 `CSDemoApp · Agent Workspace`, 짧은 이름은 `CSDemoApp`이며 `display`는 `standalone`입니다. `id`, `start_url`, `scope`는 매니페스트 기준 `./`이므로 로컬 `/`와 GitHub Pages `/CSDemoApp/`에서 각각 올바르게 해석됩니다. 테마 색상은 `#635bda`, 배경 색상은 `#f7f8fc`입니다.
+
+`public/icons`에는 192px·512px 일반 PNG와 별도의 512px maskable PNG가 있습니다. Maskable 아이콘은 불투명 배경을 사용하고 중앙 C 로고에 충분한 여백을 둡니다. Pages 빌드는 매니페스트와 아이콘도 `dist`에 복사합니다. 기존 서비스 워커는 없으며 오프라인 캐시는 추가하지 않았습니다.
+
+검증: `node --test`와 `node build-pages.mjs`를 실행하세요. 로컬 서버 실행 후 http://127.0.0.1:3000/ 또는 배포 후 https://yoonkeumjae.github.io/CSDemoApp/ 에서 Chrome/Edge 개발자 도구 → Application → Manifest를 열어 이름, 시작 URL, scope, standalone, 색상, 아이콘 및 maskable 안전 영역을 확인하세요. Network에서 매니페스트와 PNG가 200으로 로드되는지 확인하고 앱을 설치한 뒤 독립 창에서 실행되는지 확인하세요.
+
 ## 참고
 
 - [Microsoft: 사용자 지정 앱 연결 및 Token Endpoint](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-connect-bot-to-custom-application)

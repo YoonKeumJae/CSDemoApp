@@ -3,6 +3,10 @@ import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
 const files = new Map([['/', ['index.html', 'text/html; charset=utf-8']], ['/app.js', ['app.js', 'text/javascript; charset=utf-8']], ['/style.css', ['style.css', 'text/css; charset=utf-8']]]);
+files.set('/manifest.webmanifest', ['manifest.webmanifest', 'application/manifest+json; charset=utf-8']);
+for (const name of ['icon-192.png', 'icon-512.png', 'icon-maskable-512.png']) {
+  files.set(`/icons/${name}`, [`icons/${name}`, 'image/png']);
+}
 export function createApp({ endpoint = process.env.COPILOT_TOKEN_ENDPOINT, secret = process.env.DIRECT_LINE_SECRET, domain = process.env.DIRECT_LINE_DOMAIN || 'https://directline.botframework.com', agentName = process.env.AGENT_NAME || 'Copilot Assistant', fetcher = fetch } = {}) {
   return createServer(async (req, res) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
