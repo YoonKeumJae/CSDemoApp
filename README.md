@@ -66,6 +66,8 @@ node build-pages.mjs
 
 `public/icons`에는 192px·512px 일반 PNG와 별도의 512px maskable PNG가 있습니다. Maskable 아이콘은 불투명 배경을 사용하고 중앙 C 로고에 충분한 여백을 둡니다. Pages 빌드는 매니페스트와 아이콘도 `dist`에 복사합니다. 기존 서비스 워커는 없으며 오프라인 캐시는 추가하지 않았습니다.
 
+Richer PWA Install UI용 실제 앱 스크린샷은 `public/screenshots/desktop.png`(1440×900, `wide`)와 `mobile.png`(390×844, `narrow`)입니다. 매니페스트, 로컬 서버, Pages 빌드에 포함됩니다. 화면 변경 시 Playwright가 설치된 환경에서 `node capture-pwa-screenshots.mjs`로 갱신할 수 있으며, 모듈 경로를 두 번째 인자로 지정할 수도 있습니다.
+
 검증: `node --test`와 `node build-pages.mjs`를 실행하세요. 로컬 서버 실행 후 http://127.0.0.1:3000/ 또는 배포 후 https://yoonkeumjae.github.io/CSDemoApp/ 에서 Chrome/Edge 개발자 도구 → Application → Manifest를 열어 이름, 시작 URL, scope, standalone, 색상, 아이콘 및 maskable 안전 영역을 확인하세요. Network에서 매니페스트와 PNG가 200으로 로드되는지 확인하고 앱을 설치한 뒤 독립 창에서 실행되는지 확인하세요.
 
 ## 참고

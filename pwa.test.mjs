@@ -12,12 +12,14 @@ test('manifest stays within local and Pages deployment scopes', async () => {
     for (const key of ['id', 'start_url', 'scope']) assert.equal(new URL(manifest[key], manifestUrl).href, base);
   }
   assert.equal(manifest.display, 'standalone');
-  for (const icon of manifest.icons) {
+  assert.ok(manifest.screenshots.some(screenshot => screenshot.form_factor === 'wide'));
+  assert.ok(manifest.screenshots.some(screenshot => screenshot.form_factor !== 'wide'));
+  for (const icon of [...manifest.icons, ...manifest.screenshots]) {
     const png = await readFile(`public/${icon.src}`);
     assert.equal(png.subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
-    const size = Number(icon.sizes.split('x')[0]);
-    assert.equal(png.readUInt32BE(16), size);
-    assert.equal(png.readUInt32BE(20), size);
+    const [width, height] = icon.sizes.split('x').map(Number);
+    assert.equal(png.readUInt32BE(16), width);
+    assert.equal(png.readUInt32BE(20), height);
   }
   assert.ok(manifest.icons.some(icon => icon.purpose === 'maskable' && icon.sizes === '512x512'));
 });
@@ -31,7 +33,7 @@ test('local server serves manifest and every icon with correct MIME types', asyn
     assert.equal(response.status, 200);
     assert.match(response.headers.get('content-type'), /application\/manifest\+json/);
     const manifest = await response.json();
-    for (const icon of manifest.icons) {
+    for (const icon of [...manifest.icons, ...manifest.screenshots]) {
       const response = await fetch(new URL(icon.src, `${base}/manifest.webmanifest`));
       assert.equal(response.status, 200);
       assert.equal(response.headers.get('content-type'), 'image/png');
