@@ -50,6 +50,16 @@ git remote add origin https://github.com/YOUR_ACCOUNT/CSDemoApp.git
 git push -u origin main
 ```
 
+## GitHub Pages
+
+`main`에 변경을 업로드하면 `Deploy GitHub Pages` 워크플로가 테스트 후 `dist`의 정적 파일만 배포합니다. 주소는 https://yoonkeumjae.github.io/CSDemoApp/ 입니다. 최초 배포에서 Pages 설정 권한 오류가 발생하면 저장소 Settings → Pages → Source를 GitHub Actions로 설정한 뒤 워크플로를 재실행하세요.
+
+Pages에는 Node.js 서버와 `.env`가 배포되지 않습니다. 공개 화면에서 Copilot Studio Token Endpoint URL(GET)을 입력하거나, CORS가 허용된 별도 토큰 서버 URL(POST)을 입력하세요. 토큰 서버는 `{ "token": "대화용 토큰" }`을 반환해야 합니다. 지역별 Direct Line 서비스 URL도 화면에서 지정할 수 있습니다. 입력 URL은 저장하지 않습니다. Direct Line Secret은 공개 페이지에 입력하거나 코드에 포함하지 마세요.
+
+```powershell
+node build-pages.mjs
+```
+
 ## 참고
 
 - [Microsoft: 사용자 지정 앱 연결 및 Token Endpoint](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-connect-bot-to-custom-application)

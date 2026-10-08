@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="ko">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Copilot Studio · Agent Workspace</title><link rel="stylesheet" href="/style.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Copilot Studio · Agent Workspace</title><link rel="stylesheet" href="./style.css"></head>
 <body>
   <aside><div class="brand"><span class="logo">C</span> Agent Workspace</div><div class="workspace">COPILOT STUDIO</div><div class="nav active">◈ &nbsp; 에이전트 대화</div><div class="aside-note">아이디어에서 답변까지.<br>에이전트와 함께 해결하세요.</div><div class="powered">Powered by Direct Line</div></aside>
   <main><header><span>워크스페이스 <span class="slash">/</span> 에이전트 대화</span><span class="badge">Copilot Studio</span></header>
     <section class="intro"><div class="eyebrow">YOUR AI ASSISTANT</div><h1 id="agent-name">Copilot Assistant</h1><p>질문하고, 정보를 찾고, 다음 단계를 함께 준비하세요.</p></section>
     <section class="chat-shell"><div class="chat-header"><div><span class="spark">✦</span> <strong>에이전트와 대화</strong><span id="status" role="status">연결 준비</span></div><button id="restart" type="button">새 대화 ↗</button></div>
-      <div id="notice" role="status"><span class="notice-icon">✦</span><h2>무엇을 도와드릴까요?</h2><p id="notice-text">대화를 시작하면 Copilot Studio 에이전트에 연결합니다.</p><button id="connect" class="primary" type="button">대화 시작 →</button></div>
+      <div id="notice"><span class="notice-icon">✦</span><h2>무엇을 도와드릴까요?</h2><p id="notice-text" role="status">대화를 시작하면 Copilot Studio 에이전트에 연결합니다.</p><form id="connection-settings" hidden><label for="token-url">Token Endpoint URL</label><input id="token-url" type="url" placeholder="https://…" autocomplete="off"><label for="token-method">발급 방식</label><select id="token-method"><option value="GET">Copilot Studio Token Endpoint (GET)</option><option value="POST">별도 토큰 서버 (POST)</option></select><label for="directline-domain">Direct Line 서비스 URL</label><input id="directline-domain" type="url" value="https://directline.botframework.com" autocomplete="off"><small>Direct Line 키를 입력하지 마세요. URL은 이 탭에서만 사용됩니다.</small></form><button id="connect" class="primary" type="button">대화 시작 →</button></div>
       <div id="webchat" role="region" aria-label="에이전트 채팅" hidden></div>
     </section><footer>AI가 생성한 답변은 중요한 결정 전에 확인해주세요.</footer>
-  </main><script src="https://cdn.botframework.com/botframework-webchat/4.18.0/webchat.js" defer></script><script src="/app.js" defer></script>
+  </main><script src="https://cdn.botframework.com/botframework-webchat/4.18.0/webchat.js" defer></script><script src="./app.js" defer></script>
 </body></html>
