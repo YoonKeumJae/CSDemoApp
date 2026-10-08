@@ -64,11 +64,23 @@ node build-pages.mjs
 
 `public/manifest.webmanifest`를 HTML에 연결했습니다. 앱 이름은 `CSDemoApp · Agent Workspace`, 짧은 이름은 `CSDemoApp`이며 `display`는 `standalone`입니다. `id`, `start_url`, `scope`는 매니페스트 기준 `./`이므로 로컬 `/`와 GitHub Pages `/CSDemoApp/`에서 각각 올바르게 해석됩니다. 테마 색상은 `#635bda`, 배경 색상은 `#f7f8fc`입니다.
 
-`public/icons`에는 192px·512px 일반 PNG와 별도의 512px maskable PNG가 있습니다. Maskable 아이콘은 불투명 배경을 사용하고 중앙 C 로고에 충분한 여백을 둡니다. Pages 빌드는 매니페스트와 아이콘도 `dist`에 복사합니다. 기존 서비스 워커는 없으며 오프라인 캐시는 추가하지 않았습니다.
+`public/icons`에는 192px·512px 일반 PNG와 별도의 512px maskable PNG가 있습니다. Maskable 아이콘은 불투명 배경을 사용하고 중앙 C 로고에 충분한 여백을 둡니다. Pages 빌드는 매니페스트와 아이콘도 `dist`에 복사합니다.
 
 Richer PWA Install UI용 실제 앱 스크린샷은 `public/screenshots/desktop.png`(1440×900, `wide`)와 `mobile.png`(390×844, `narrow`)입니다. 매니페스트, 로컬 서버, Pages 빌드에 포함됩니다. 화면 변경 시 Playwright가 설치된 환경에서 `node capture-pwa-screenshots.mjs`로 갱신할 수 있으며, 모듈 경로를 두 번째 인자로 지정할 수도 있습니다.
 
 검증: `node --test`와 `node build-pages.mjs`를 실행하세요. 로컬 서버 실행 후 http://127.0.0.1:3000/ 또는 배포 후 https://yoonkeumjae.github.io/CSDemoApp/ 에서 Chrome/Edge 개발자 도구 → Application → Manifest를 열어 이름, 시작 URL, scope, standalone, 색상, 아이콘 및 maskable 안전 영역을 확인하세요. Network에서 매니페스트와 PNG가 200으로 로드되는지 확인하고 앱을 설치한 뒤 독립 창에서 실행되는지 확인하세요.
+
+## 오프라인 안내
+
+기존 서비스 워커 및 PWA 플러그인은 없었으며 `public/register-sw.js`에서 단일 등록합니다. 같은 워커는 기존 등록을 재사용하고, 다른 워커가 앱 경로를 제어하고 있으면 새로 등록하지 않습니다. GitHub Pages의 워커 URL은 `/CSDemoApp/sw.js`, scope는 `/CSDemoApp/`입니다. 로컬은 `/sw.js`, scope `/`입니다. HTTPS 또는 localhost에서 동작합니다.
+
+캐시에 저장하는 것은 사용자 데이터와 외부 리소스가 없는 정적 `offline.html` 한 파일뿐입니다. 설치 시 쿠키·인증정보 없이 새로 요청하여 저장합니다. 페이지 이동은 항상 네트워크에 요청하고, 네트워크 오류에서만 오프라인 안내를 반환합니다. HTTP 401·403·404·500 응답은 그대로 유지합니다. 로그인·인증 경로, API, POST, CDN 및 일반 리소스 요청에는 개입하지 않으며 로그인·인증·사용자별 HTML·API 응답을 Cache Storage에 저장하지 않습니다. 최초 온라인 방문 및 워커 설치 완료 전에는 오프라인 안내가 제공되지 않습니다. 오프라인 채팅은 지원하지 않습니다.
+
+캐시 이름은 `csdemo-offline:<scope>:v1`입니다. 안내 페이지 수정 시 `public/sw.js`의 버전을 올리세요. 업데이트 시 HTTP 캐시를 거치지 않고 워커를 확인하고, 새 워커는 기존 탭이 닫힐 때까지 대기합니다(`skipWaiting` 미사용). 활성화 시 같은 scope의 이전 버전 캐시만 삭제하고 다른 앱 캐시는 유지합니다.
+
+자동 검증: Playwright가 설치된 환경에서 `node verify-offline.mjs`를 실행합니다(모듈 경로를 두 번째 인자로 지정 가능). 실제 Edge에서 `/`와 `/CSDemoApp/`의 단일 등록, 오프라인 페이지 이동·새로고침, 개인 HTML·API 미캐시, 쿠키 없는 안내 페이지 다운로드, 연결 복구를 확인합니다. 기본 검증은 `node --test`, 빌드는 `node build-pages.mjs`입니다.
+
+수동 검증: 온라인으로 한 번 열고 개발자 도구 → Application → Service Workers에서 활성화와 scope를 확인합니다. Cache Storage에는 해당 scope의 `offline.html`만 있어야 합니다. Network → Offline을 선택하고 앱 scope 안의 다른 페이지로 이동하거나 새로고침하면 안내가 표시됩니다. Online으로 바꾼 뒤 ‘다시 시도’를 누르면 요청한 페이지가 다시 네트워크에서 로드됩니다. API·로그인 경로는 오프라인 안내로 바뀌지 않아야 합니다.
 
 ## 참고
 

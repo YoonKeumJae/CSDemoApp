@@ -4,6 +4,9 @@ import { fileURLToPath } from 'node:url';
 
 const files = new Map([['/', ['index.html', 'text/html; charset=utf-8']], ['/app.js', ['app.js', 'text/javascript; charset=utf-8']], ['/style.css', ['style.css', 'text/css; charset=utf-8']]]);
 files.set('/manifest.webmanifest', ['manifest.webmanifest', 'application/manifest+json; charset=utf-8']);
+files.set('/sw.js', ['sw.js', 'text/javascript; charset=utf-8']);
+files.set('/register-sw.js', ['register-sw.js', 'text/javascript; charset=utf-8']);
+files.set('/offline.html', ['offline.html', 'text/html; charset=utf-8']);
 for (const name of ['desktop.png', 'mobile.png']) {
   files.set(`/screenshots/${name}`, [`screenshots/${name}`, 'image/png']);
 }
