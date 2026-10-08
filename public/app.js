@@ -3,10 +3,8 @@ const notice = document.querySelector('#notice');
 const message = document.querySelector('#notice-text');
 const connectButton = document.querySelector('#connect');
 const chat = document.querySelector('#webchat');
-const settings = document.querySelector('#connection-settings');
+const agentEndpoint = 'https://default62ae463a9f124edf85444f6ca38345.24.environment.api.powerplatform.com/powervirtualagents/botsbyschema/new_CSDemoApp/directline/token?api-version=2022-03-01-preview';
 const isStatic = Boolean(document.querySelector('meta[name="static-hosting"]'));
-settings.hidden = !isStatic;
-settings.addEventListener('submit', event => { event.preventDefault(); connect(); });
 let directLine, subscription, busy = false, generation = 0;
 async function connect() {
   if (busy) return;
@@ -19,25 +17,13 @@ async function connect() {
   status.textContent = '연결 중';
   try {
     if (!window.WebChat) throw new Error('채팅 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인해주세요.');
-    let url = '/api/token', method = 'POST';
-    if (isStatic) {
-      const input = document.querySelector('#token-url');
-      if (!input.value.trim()) throw new Error('Copilot Studio Token Endpoint URL을 입력해주세요.');
-      const endpoint = new URL(input.value.trim());
-      if (endpoint.protocol !== 'https:' || endpoint.username || endpoint.password) throw new Error('HTTPS Token Endpoint URL을 입력해주세요.');
-      url = endpoint.href;
-      method = document.querySelector('#token-method').value;
-    }
+    const url = isStatic ? agentEndpoint : '/api/token';
+    const method = isStatic ? 'GET' : 'POST';
     const response = await fetch(url, { method, signal: AbortSignal.timeout(20000), credentials: 'omit' });
     const data = await response.json();
     if (!response.ok) throw new Error(data.error);
     if (typeof data.token !== 'string' || !data.token) throw new Error('토큰 서버가 유효한 대화용 토큰을 반환하지 않았습니다.');
-    let domain = data.domain;
-    if (isStatic) {
-      const root = new URL(document.querySelector('#directline-domain').value.trim());
-      if (root.protocol !== 'https:' || root.username || root.password || root.search || root.hash) throw new Error('HTTPS Direct Line 서비스 URL을 입력해주세요.');
-      domain = `${root.href.replace(/\/$/, '').replace(/\/v3\/directline$/, '')}/v3/directline`;
-    }
+    const domain = isStatic ? 'https://unitedstates.directline.botframework.com/v3/directline' : data.domain;
     const userID = `dl_${crypto.randomUUID()}`;
     directLine = window.WebChat.createDirectLine({ token: data.token, domain });
     window.WebChat.renderWebChat({ directLine, userID, locale: 'ko-KR', styleOptions: { accent: '#635bda', backgroundColor: '#ffffff', bubbleBackground: '#f3f3fa', bubbleFromUserBackground: '#635bda', bubbleFromUserTextColor: '#fff', bubbleBorderRadius: 14, bubbleFromUserBorderRadius: 14, hideUploadButton: true, botAvatarInitials: 'AI', userAvatarInitials: '나', sendBoxPlaceholder: '메시지를 입력하세요…', fontSizeSmall: '85%' } }, chat);
@@ -56,8 +42,6 @@ async function connect() {
 connectButton.addEventListener('click', connect);
 document.querySelector('#restart').addEventListener('click', connect);
 if (isStatic) {
-  document.querySelector('#token-url').value = 'https://default62ae463a9f124edf85444f6ca38345.24.environment.api.powerplatform.com/powervirtualagents/botsbyschema/new_CSDemoApp/directline/token?api-version=2022-03-01-preview';
-  document.querySelector('#directline-domain').value = 'https://unitedstates.directline.botframework.com';
   document.querySelector('#agent-name').textContent = 'CSDemoApp';
   status.textContent = '대화 시작 준비';
   message.textContent = 'CSDemoApp 에이전트가 준비되었습니다. 대화 시작을 눌러주세요.';
