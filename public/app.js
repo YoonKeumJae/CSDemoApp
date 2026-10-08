@@ -56,8 +56,11 @@ async function connect() {
 connectButton.addEventListener('click', connect);
 document.querySelector('#restart').addEventListener('click', connect);
 if (isStatic) {
-  status.textContent = '연결 설정 필요';
-  message.textContent = 'Copilot Studio의 Token Endpoint 또는 별도 토큰 서버 URL로 연결하세요.';
+  document.querySelector('#token-url').value = 'https://default62ae463a9f124edf85444f6ca38345.24.environment.api.powerplatform.com/powervirtualagents/botsbyschema/new_CSDemoApp/directline/token?api-version=2022-03-01-preview';
+  document.querySelector('#directline-domain').value = 'https://unitedstates.directline.botframework.com';
+  document.querySelector('#agent-name').textContent = 'CSDemoApp';
+  status.textContent = '대화 시작 준비';
+  message.textContent = 'CSDemoApp 에이전트가 준비되었습니다. 대화 시작을 눌러주세요.';
 } else fetch('/api/config').then(r => r.json()).then(config => {
   document.querySelector('#agent-name').textContent = config.agentName;
   if (!config.configured) { status.textContent = '설정 필요'; message.textContent = '서버의 .env 파일에 Token Endpoint 또는 Direct Line Secret을 설정해주세요.'; }
