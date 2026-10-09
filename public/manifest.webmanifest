@@ -1,6 +1,23 @@
 {
   "name": "CSDemoApp · Agent Workspace",
   "short_name": "CSDemoApp",
+  "description": "Copilot Studio 에이전트와 대화하며 질문하고 정보를 찾는 한국어 AI 워크스페이스입니다.",
+  "categories": ["productivity", "business"],
+  "orientation": "any",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "display_override": ["standalone"],
+  "launch_handler": { "client_mode": "navigate-existing" },
+  "shortcuts": [
+    {
+      "name": "에이전트 대화",
+      "short_name": "대화",
+      "description": "에이전트 대화 시작 화면을 엽니다.",
+      "url": "./#notice",
+      "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ],
   "id": "./",
   "start_url": "./",
   "scope": "./",

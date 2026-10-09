@@ -1,6 +1,8 @@
-if ('serviceWorker' in navigator && window.isSecureContext) {
-  window.addEventListener('load', async () => {
-    const scope = new URL('./', window.location.href).href;
+// Register as soon as this first-party script runs; do not wait for the CDN or window.load.
+const registrationScriptURL = document.currentScript?.src;
+if ('serviceWorker' in navigator && window.isSecureContext && registrationScriptURL) {
+  (async () => {
+    const scope = new URL('./', registrationScriptURL).href;
     const scriptURL = new URL('sw.js', scope).href;
     try {
       const existing = await navigator.serviceWorker.getRegistration(scope);
@@ -11,5 +13,5 @@ if ('serviceWorker' in navigator && window.isSecureContext) {
     } catch (error) {
       console.warn('오프라인 안내 기능을 준비하지 못했습니다.', error);
     }
-  });
+  })();
 }

@@ -72,6 +72,10 @@ Richer PWA Install UI용 실제 앱 스크린샷은 `public/screenshots/desktop.
 
 ## 오프라인 안내
 
+PWABuilder 기본 권장사항으로 설명, 카테고리(`productivity`, `business`), 방향(`any`), 문자 방향(`ltr`), PWA 우선 설치(`prefer_related_applications: false`), 표시 방식(`display_override: ["standalone"]`), 대화 화면 바로가기, 실행 방식(`navigate-existing`)을 설정했습니다. 등록 코드는 외부 CDN 로드 완료를 기다리지 않고 실행하며 자신의 스크립트 URL을 기준으로 scope를 고정합니다.
+
+네이티브 앱이 없어 `related_applications`는 빈 배열입니다. IARC 등급 ID는 실제 발급받은 값이 필요합니다. 파일·프로토콜 처리, 공유 받기, 다른 도메인 scope, 위젯, 사이드 패널, 사용자 정의 제목 표시줄, 탭 모드, 노트 앱 통합은 현재 앱에서 제공하지 않는 선택 기능이므로 선언하지 않습니다. 이 항목들은 PWABuilder의 선택 권장사항으로 남을 수 있습니다.
+
 기존 서비스 워커 및 PWA 플러그인은 없었으며 `public/register-sw.js`에서 단일 등록합니다. 같은 워커는 기존 등록을 재사용하고, 다른 워커가 앱 경로를 제어하고 있으면 새로 등록하지 않습니다. GitHub Pages의 워커 URL은 `/CSDemoApp/sw.js`, scope는 `/CSDemoApp/`입니다. 로컬은 `/sw.js`, scope `/`입니다. HTTPS 또는 localhost에서 동작합니다.
 
 캐시에 저장하는 것은 사용자 데이터와 외부 리소스가 없는 정적 `offline.html` 한 파일뿐입니다. 설치 시 쿠키·인증정보 없이 새로 요청하여 저장합니다. 페이지 이동은 항상 네트워크에 요청하고, 네트워크 오류에서만 오프라인 안내를 반환합니다. HTTP 401·403·404·500 응답은 그대로 유지합니다. 로그인·인증 경로, API, POST, CDN 및 일반 리소스 요청에는 개입하지 않으며 로그인·인증·사용자별 HTML·API 응답을 Cache Storage에 저장하지 않습니다. 최초 온라인 방문 및 워커 설치 완료 전에는 오프라인 안내가 제공되지 않습니다. 오프라인 채팅은 지원하지 않습니다.
