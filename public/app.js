@@ -19,8 +19,15 @@ async function connect() {
     if (!window.WebChat) throw new Error('채팅 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인해주세요.');
     const url = isStatic ? agentEndpoint : '/api/token';
     const method = isStatic ? 'GET' : 'POST';
-    const response = await fetch(url, { method, signal: AbortSignal.timeout(20000), credentials: 'omit' });
-    const data = await response.json();
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20000);
+    let response, data;
+    try {
+      response = await fetch(url, { method, signal: controller.signal, credentials: 'omit' });
+      data = await response.json();
+    } finally {
+      clearTimeout(timeout);
+    }
     if (!response.ok) throw new Error(data.error);
     if (typeof data.token !== 'string' || !data.token) throw new Error('토큰 서버가 유효한 대화용 토큰을 반환하지 않았습니다.');
     const domain = isStatic ? 'https://unitedstates.directline.botframework.com/v3/directline' : data.domain;
